@@ -1,12 +1,10 @@
 package com.example.microservice2.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 @Entity(name = "indexed_documents")
 public class IndexedDocument {
@@ -19,13 +17,20 @@ public class IndexedDocument {
     @Column(name = "file_name")
     private String fileName;
 
-    @Column(name = "file")
+    @Column(name = "file", length = 100000)
+    @Lob
     private byte[] file;
 
     @Column(name = "indexed")
     private boolean indexed;
 
     public IndexedDocument() {
+    }
+
+    public IndexedDocument(String fileName, String content) {
+        this.fileName = fileName;
+        this.file = content.getBytes();
+        this.indexed = false;
     }
 
     public IndexedDocument(File file) {
@@ -68,5 +73,15 @@ public class IndexedDocument {
 
     public void setIndexed(boolean indexed) {
         this.indexed = indexed;
+    }
+
+    @Override
+    public String toString() {
+        return "IndexedDocument{" +
+                "id=" + id +
+                ", fileName='" + fileName + '\'' +
+                ", file=" + Arrays.toString(file) +
+                ", indexed=" + indexed +
+                '}';
     }
 }
